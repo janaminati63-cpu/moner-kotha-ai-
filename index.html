@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#202123">
+<title>Moner Kotha AI ❤️</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #343541;
+  color: white;
+}
+
+header {
+  background: #202123;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid #555;
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.subtitle {
+  color: #c5c5d0;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+button {
+  cursor: pointer;
+  color: white;
+  border: 0;
+  border-radius: 9px;
+}
+
+.new-chat {
+  background: #343541;
+  border: 1px solid #777;
+  padding: 10px;
+  font-size: 14px;
+}
+
+#chat {
+  height: calc(100dvh - 150px);
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.welcome {
+  text-align: center;
+  padding: 55px 20px;
+}
+
+.welcome h2 {
+  font-size: 26px;
+}
+
+.welcome p {
+  color: #d1d5db;
+}
+
+.message {
+  display: flex;
+  gap: 12px;
+  padding: 18px 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.ai-message {
+  background: #444654;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  min-width: 35px;
+  border-radius: 8px;
+  background: #10a37f;
+  display: grid;
+  place-items: center;
+}
+
+.user-message .avatar {
+  background: #64748b;
+}
+
+.message-text {
+  padding-top: 3px;
+  white-space: pre-wrap;
+}
+
+footer {
+  background: #343541;
+  border-top: 1px solid #555;
+  padding: 10px;
+}
+
+form {
+  max-width: 720px;
+  margin: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #777;
+  background: #40414f;
+  border-radius: 14px;
+  padding: 7px;
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  color: white;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 12px 7px;
+}
+
+input::placeholder {
+  color: #c5c5d0;
+}
+
+.send {
+  background: #10a37f;
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+
+.note {
+  color: #c5c5d0;
+  font-size: 11px;
+  text-align: center;
+  margin: 9px 0 0;
+}
+
+@media (min-width: 700px) {
+  .message {
+    padding-left: max(20px, calc((100% - 720px)/2));
+    padding-right: max(20px, calc((100% - 720px)/2));
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <div class="brand">🤖 Moner Kotha AI ❤️</div>
+    <div class="subtitle">আপনার বাংলা AI সহকারী</div>
+  </div>
+  <button class="new-chat" type="button"
+    onclick="newChat()">＋ নতুন চ্যাট</button>
+</header>
+
+<main id="chat" aria-live="polite">
+  <div class="welcome" id="welcome">
+    <h2>নমস্কার! 👋</h2>
+    <p>আজ আপনি কী শিখতে চান?</p>
+  </div>
+</main>
+
+<footer>
+  <form id="chatForm">
+    <input id="question" type="text"
+      placeholder="আপনার প্রশ্ন লিখুন..."
+      autocomplete="off" required>
+    <button class="send" type="submit"
+      aria-label="প্রশ্ন পাঠান">➤</button>
+  </form>
+  <p class="note">
+    এটি একটি ডেমো অ্যাপ। উত্তরগুলি এখনও আসল AI থেকে আসছে না।
+  </p>
+</footer>
+
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("question");
+
+function addMessage(label, text, isUser) {
+  const row = document.createElement("div");
+  row.className = "message " +
+    (isUser ? "user-message" : "ai-message");
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = isUser ? "👤" : "🤖";
+
+  const content = document.createElement("div");
+  content.className = "message-text";
+
+  const bold = document.createElement("b");
+  bold.textContent = label + ": ";
+
+  content.appendChild(bold);
+  content.appendChild(document.createTextNode(text));
+
+  row.appendChild(avatar);
+  row.appendChild(content);
+  chat.appendChild(row);
+}
+
+document.getElementById("chatForm")
+  .addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const question = input.value.trim();
+    if (!question) return;
+
+    const welcome = document.getElementById("welcome");
+    if (welcome) welcome.remove();
+
+    addMessage("আপনি", question, true);
+
+    addMessage(
+      "ডেমো AI",
+      "আপনার প্রশ্নটি গ্রহণ করেছি। এটি একটি নমুনা উত্তর। " +
+      "আসল AI যুক্ত করলে প্রশ্ন অনুযায়ী উত্তর তৈরি হবে।",
+      false
+    );
+
+    input.value = "";
+    chat.scrollTop = chat.scrollHeight;
+    input.focus();
+  });
+
+function newChat() {
+  chat.replaceChildren();
+
+  const welcome = document.createElement("div");
+  welcome.className = "welcome";
+  welcome.id = "welcome";
+
+  const title = document.createElement("h2");
+  title.textContent = "নমস্কার! 👋";
+
+  const description = document.createElement("p");
+  description.textContent = "আজ আপনি কী শিখতে চান?";
+
+  welcome.append(title, description);
+  chat.appendChild(welcome);
+  input.value = "";
+  input.focus();
+}
+</script>
+
+</body>
+</html>
